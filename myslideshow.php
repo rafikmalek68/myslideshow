@@ -12,93 +12,43 @@ function myslideshow_init() {
         'label' => 'My Slideshow',
         'supports' => array(
             'title',
-            'thumbnail'
-        )
+            'thumbnail',
+        ),
     );
     register_post_type('myslideshow', $args);
 }
 
 add_action('init', 'myslideshow_init');
 
-/* Fire our meta box setup function on the post editor screen. */
-add_action('load-post.php', 'smashing_post_meta_boxes_setup');
-add_action('load-post-new.php', 'smashing_post_meta_boxes_setup');
-
-function smashing_add_post_meta_boxes() {
-    add_meta_box(
-            'smashing-post-class', // Unique ID
-            esc_html__('Post Class', 'example'), // Title
-            'smashing_post_class_meta_box', // Callback function
-            'myslideshow', // Admin page (or post type)
-            'advanced', // Context
-            'default'         // Priority
-    );
+function wp_slide_add_scripts() {
+    wp_register_script('slider-jquery', plugins_url('/lib/responsiveslides/js/jquery.min.js', __FILE__));
+    wp_register_script('slider-responsiveslides', plugins_url('/lib/responsiveslides/js/responsiveslides.min.js', __FILE__));
+    wp_register_script('slider-custom', plugins_url('/lib/responsiveslides/js/slider-custom.js', __FILE__));
+    wp_enqueue_script('slider-jquery');
+    wp_enqueue_script('slider-responsiveslides');
+    wp_enqueue_script('slider-custom');
 }
 
-/* Display the post meta box. */
+add_action('wp_enqueue_scripts', 'wp_slide_add_scripts');
 
-function smashing_post_class_meta_box($post) {
-    ?>
-
-    <?php wp_nonce_field(basename(__FILE__), 'smashing_post_class_nonce'); ?>
-
-    <p>
-        <label for="smashing-post-class"><?php _e("Add a custom CSS class, which will be applied to WordPress' post class.", 'example'); ?></label>
-        <br />
-        <input class="widefat" type="text" name="smashing-post-class" id="smashing-post-class" value="<?php echo esc_attr(get_post_meta($post->ID, 'smashing_post_class', true)); ?>" size="30" />
-    </p>
-<?php
+function wp_slide_add_style() {
+    wp_register_style('slider-style', plugins_url('/lib/responsiveslides/css/responsiveslides.css', __FILE__), array(), '20120208', 'all');
+    wp_enqueue_style('slider-style');
 }
 
-/* Meta box setup function. */
+add_action('wp_enqueue_scripts', 'wp_slide_add_style');
 
-function smashing_post_meta_boxes_setup() {
-
-    /* Add meta boxes on the 'add_meta_boxes' hook. */
-    add_action('add_meta_boxes', 'smashing_add_post_meta_boxes');
-
-    /* Save post meta on the 'save_post' hook. */
-    add_action('save_post', 'smashing_save_post_class_meta', 10, 2);
+function add_admin_scripts($hook) {
+    global $post;
+    if ($hook == 'post-new.php' || $hook == 'post.php') {
+        if ('myslideshow' === $post->post_type) {
+            wp_enqueue_script('myslideshow', plugins_url('/js/custom_script.js', __FILE__), '', '', true);
+            wp_enqueue_style('myslideshow', plugins_url('/css/custom_css.css', __FILE__));
+        }
+    }
 }
 
-/* Save the meta box's post metadata. */
-
-function smashing_save_post_class_meta($post_id, $post) {
-
-    /* Verify the nonce before proceeding. */
-    if (!isset($_POST['smashing_post_class_nonce']) || !wp_verify_nonce($_POST['smashing_post_class_nonce'], basename(__FILE__)))
-        return $post_id;
-
-    /* Get the post type object. */
-    $post_type = get_post_type_object($post->post_type);
-
-    /* Check if the current user has permission to edit the post. */
-    if (!current_user_can($post_type->cap->edit_post, $post_id))
-        return $post_id;
-
-    /* Get the posted data and sanitize it for use as an HTML class. */
-    $new_meta_value = ( isset($_POST['smashing-post-class']) ? sanitize_html_class($_POST['smashing-post-class']) : '' );
-
-    /* Get the meta key. */
-    $meta_key = 'smashing_post_class';
-
-    /* Get the meta value of the custom field key. */
-    $meta_value = get_post_meta($post_id, $meta_key, true);
-
-    /* If a new meta value was added and there was no previous value, add it. */
-    if ($new_meta_value && '' == $meta_value)
-        add_post_meta($post_id, $meta_key, $new_meta_value, true);
-
-    /* If the new meta value does not match the old value, update it. */
-    elseif ($new_meta_value && $new_meta_value != $meta_value)
-        update_post_meta($post_id, $meta_key, $new_meta_value);
-
-    /* If there is no new meta value but an old value exists, delete it. */
-    elseif ('' == $new_meta_value && $meta_value)
-        delete_post_meta($post_id, $meta_key, $meta_value);
-}
-
-///======================
+add_action('admin_enqueue_scripts', 'add_admin_scripts', 10, 1);
 
 add_action('add_meta_boxes', 'listing_image_add_metabox');
 
@@ -112,49 +62,41 @@ function listing_image_metabox($post) {
 
     $image_string = get_post_meta($post->ID, '_ImageIds', true);
     $image_array = json_decode($image_string);
-    
-    
-    if(!empty($image_array)){
-    
-    $content .='<div id="slideimage_contenar">';
-    for ($i = 0; $i < count($image_array); $i++) {
-        $image_id = $image_array[$i];
-        $old_content_width = $content_width;
-        $content_width = 254;
 
-        if ($image_id && get_post($image_id)) {
 
-            if (!isset($_wp_additional_image_sizes['post-thumbnail'])) {
-                $thumbnail_html = wp_get_attachment_image($image_id, array($content_width, $content_width));
-            } else {
-                $thumbnail_html = wp_get_attachment_image($image_id, 'post-thumbnail');
+    if (!empty($image_array)) {
+
+        $content .='<ul id="slideimage_contenar">';
+        for ($i = 0; $i < count($image_array); $i++) {
+            $image_id = $image_array[$i];
+            $old_content_width = $content_width;
+            $content_width = 150;
+
+            if ($image_id && get_post($image_id)) {
+
+                if (!isset($_wp_additional_image_sizes['post-thumbnail'])) {
+                    $thumbnail_html = wp_get_attachment_image($image_id, array($content_width, $content_width));
+                } else {
+                    $thumbnail_html = wp_get_attachment_image($image_id, 'post-thumbnail');
+                }
+
+                if (!empty($thumbnail_html)) {
+
+                    $content .='<li class="ui-state-default" id="imageid_' . esc_attr($image_id) . '">';
+                    $content .='<span class="ui-icon ui-icon-arrowthick-2-n-s"></span>';
+                    $content .=$thumbnail_html;
+                    $content .='<input type="hidden" id="hidden_imgid_' . esc_attr($image_id) . '" name="ImageIds[]" value="' . esc_attr($image_id) . '" />';
+                    $content .='<p class="hide-if-no-js"><a title="" class="remove_img" href="javascript:;"  id="remove_' . esc_attr($image_id) . '" >Remove</a></p>';
+                    $content .='</li>';
+                }
             }
-
-            if (!empty($thumbnail_html)) {
-
-                //$content .= $thumbnail_html;
-                //$content .= '<p class="hide-if-no-js"><a href="javascript:;" id="remove_listing_image_button" >' . esc_html__('Remove listing image', 'text-domain') . '</a></p>';
-                //$content .= '<input type="hidden" id="upload_listing_image" name="ImageIds" value="' . esc_attr($image_id) . '" />';
-                
-                      $content .='<div id="imageid_'.esc_attr($image_id).'">';
-                      $content .=$thumbnail_html;
-                      $content .='<input type="hidden" id="hidden_imgid_'.esc_attr($image_id).'" name="ImageIds[]" value="'.esc_attr($image_id).'" />';
-                      $content .='<p class="hide-if-no-js"><a title="" class="remove_img" href="javascript:;"  id="remove_'.esc_attr($image_id).'" >Remove</a></p>';
-                      $content .='</div>';
-     
-                
-            }
-
-            //$content_width = $old_content_width;
-        } 
-    }
-    $content .='</div>';
-    $content .= '<p class="hide-if-no-js"><a title="' . esc_attr__('Set listing image', 'text-domain') . '" href="javascript:;" id="upload_listing_image_button" id="set-listing-image" data-uploader_title="' . esc_attr__('Choose an image', 'text-domain') . '" data-uploader_button_text="' . esc_attr__('Add Slide', 'text-domain') . '">' . esc_html__('Add Slide', 'text-domain') . '</a></p>';
-    }else {
-
-            $content .='<div id="slideimage_contenar"></div>';
-            $content .= '<p class="hide-if-no-js"><a title="' . esc_attr__('Set listing image', 'text-domain') . '" href="javascript:;" id="upload_listing_image_button" id="set-listing-image" data-uploader_title="' . esc_attr__('Choose an image', 'text-domain') . '" data-uploader_button_text="' . esc_attr__('Add Slide', 'text-domain') . '">' . esc_html__('Add Slide', 'text-domain') . '</a></p>';
         }
+        $content .='</ul>';
+        $content .= '<p class="hide-if-no-js"><a title="' . esc_attr__('Set listing image', 'text-domain') . '" href="javascript:;" id="upload_listing_image_button" id="set-listing-image" data-uploader_title="' . esc_attr__('Choose an image', 'text-domain') . '" data-uploader_button_text="' . esc_attr__('Add Slide', 'text-domain') . '">' . esc_html__('Add Slide', 'text-domain') . '</a></p>';
+    } else {
+        $content .='<ul id="slideimage_contenar"></ul>';
+        $content .= '<p class="hide-if-no-js"><a title="' . esc_attr__('Set listing image', 'text-domain') . '" href="javascript:;" id="upload_listing_image_button" id="set-listing-image" data-uploader_title="' . esc_attr__('Choose an image', 'text-domain') . '" data-uploader_button_text="' . esc_attr__('Add Slide', 'text-domain') . '">' . esc_html__('Add Slide', 'text-domain') . '</a></p>';
+    }
 
     echo $content;
 }
@@ -169,13 +111,119 @@ function listing_image_save($post_id) {
     }
 }
 
-function add_admin_scripts($hook) {
+function get_slider($atts) {
+
     global $post;
-    if ($hook == 'post-new.php' || $hook == 'post.php') {
-        if ('myslideshow' === $post->post_type) {
-            wp_enqueue_script('myslideshow', plugins_url('/js/custom_script.js', __FILE__), '', '', true); // "TRUE" - ADDS JS TO FOOTER
+    $opt_val_max_width = get_option('sld_max_width');
+    $opt_val_speed = get_option('sld_speed');
+    $opt_val_auto = get_option('sld_auto');
+
+    extract(shortcode_atts(array(
+        'id' => ''
+                    ), $atts));
+    $args = array('post_type' => 'myslideshow', 'p' => $id);
+    $myposts = NEW WP_Query($args);
+    if ($myposts->have_posts()) {
+        while ($myposts->have_posts()) {
+            $myposts->the_post();
+            $image_string = get_post_meta($post->ID, '_ImageIds', true);
+            $image_array = json_decode($image_string);
+            $output.='<ul class="rslides" id="slider1">';
+            for ($i = 0; $i < count($image_array); $i++) {
+                $image_id = $image_array[$i];
+                $old_content_width = $content_width;
+                $content_width = 1000;
+                $thumbnail_html = wp_get_attachment_image($image_id, array($content_width, $content_width));
+                $output.='<li>' . $thumbnail_html . '</li>';
+            }
+            $output.='</ul>';
+            $output .='<script>$(function () {
+                                    $("#slider1").responsiveSlides({
+                                      maxwidth: ' . $opt_val_max_width . ',
+                                      speed: ' . $opt_val_speed . ',
+                                      pager: true,
+                                    });
+                                    });
+                              </script>';
         }
+        return $output;
     }
 }
 
-add_action('admin_enqueue_scripts', 'add_admin_scripts', 10, 1);
+add_shortcode('myslideshow', 'get_slider'); //[myslideshow id='1']
+
+function slide_settings() {
+    add_submenu_page(
+            "edit.php?post_type=myslideshow", 'myslideshow settings', 'Settings', 'manage_options', "myslideshow-settings", 'show_settings_admin_page'
+    );
+}
+
+add_action('admin_menu', 'slide_settings');
+
+function show_settings_admin_page() {
+
+    if (!current_user_can('manage_options')) {
+        wp_die(__('You do not have sufficient permissions to access this page.'));
+    }
+
+    $hidden_field_name = 'sld_submit_hidden';
+
+    $opt_sld_max_width = 'sld_max_width';
+    $data_field_sld_max_width = 'sld_max_width';
+
+    $opt_sld_speed = 'sld_speed';
+    $data_field_sld_speed = 'sld_speed';
+
+    $opt_sld_auto = 'sld_auto';
+    $data_field_sld_auto = 'sld_auto';
+
+
+
+    $opt_val_max_width = get_option($opt_sld_max_width);
+    $opt_val_speed = get_option($opt_sld_speed);
+    $opt_val_auto = get_option($opt_sld_auto);
+
+
+
+    if (isset($_POST[$hidden_field_name]) && $_POST[$hidden_field_name] == 'Y') {
+        $opt_val_max_width = $_POST[$data_field_sld_max_width];
+        $opt_val_speed = $_POST[$data_field_sld_speed];
+        $opt_val_auto = $_POST[$data_field_sld_auto];
+
+        update_option($opt_sld_max_width, $opt_val_max_width);
+        update_option($opt_sld_speed, $opt_val_speed);
+        update_option($opt_sld_auto, $opt_val_auto);
+        ?>
+        <div class="updated"><p><strong><?php _e('settings saved.', 'myslider'); ?></strong></p></div>
+        <?php
+    }
+    echo '<div class="wrap">';
+    echo "<h2>" . __('General Settings', 'myslider') . "</h2>";
+    ?>
+
+    <form name="form1" method="post" action="">
+        <input type="hidden" name="<?php echo $hidden_field_name; ?>" value="Y">
+
+        <p><?php _e("Max Width:", 'myslider'); ?> 
+            <input type="text" name="<?php echo $data_field_sld_max_width; ?>" value="<?php echo $opt_val_max_width; ?>" size="20">
+        </p>
+
+        <p><?php _e("Speed:", 'myslider'); ?> 
+            <input type="text" name="<?php echo $data_field_sld_speed; ?>" value="<?php echo $opt_val_speed; ?>" size="20">
+        </p><hr />
+
+
+        <p><?php _e("Auto Slide:", 'myslider'); ?> 
+            <input type="radio" <?php echo ('true' == $opt_val_auto) ? 'checked' : ''; ?>  name="<?php echo $data_field_sld_auto; ?>" value="true" size="20">True
+
+            <input type="radio" <?php echo ('false' == $opt_val_auto) ? 'checked' : ''; ?> name="<?php echo $data_field_sld_auto; ?>" value="false" size="20">False
+        </p><hr />
+
+        <p class="submit">
+            <input type="submit" name="Submit" class="button-primary" value="<?php esc_attr_e('Save Changes') ?>" />
+        </p>
+    </form>
+    </div>
+    <?php
+}
+   
