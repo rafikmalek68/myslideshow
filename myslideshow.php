@@ -34,6 +34,7 @@ add_action( 'wp_enqueue_scripts', 'wp_slide_add_scripts' );
 function wp_slide_add_style() {
     wp_register_style( 'slider-style', plugins_url('/lib/responsiveslides/css/responsiveslides.css', __FILE__), array(), '20120208', 'all' );
     wp_enqueue_style( 'slider-style' );
+   
 }
 
 add_action( 'wp_enqueue_scripts', 'wp_slide_add_style' );
@@ -108,11 +109,10 @@ function get_slider($atts) {
     $opt_val_max_width = get_option( 'sld_max_width' );
     $opt_val_speed = get_option( 'sld_speed' );
     $opt_val_auto = get_option( 'sld_auto' );
-
+    $opt_val_nav = get_option( 'sld_nav' );
     extract(shortcode_atts(array(
         'id' => ''
     ), $atts));
-    
     $args = array( 'post_type' => 'myslideshow', 'p' => $id );
     $myposts = NEW WP_Query($args);
     if ( $myposts->have_posts() ) {
@@ -120,6 +120,7 @@ function get_slider($atts) {
             $myposts->the_post();
             $image_string = get_post_meta( $post->ID, '_ImageIds', true );
             $image_array = json_decode( $image_string );
+            $output.='<div class="callbacks_container">';
             $output.='<ul class="rslides" id="slider1">';
             for ( $i = 0; $i < count($image_array); $i++ ) {
                 $image_id = $image_array[$i];
@@ -129,14 +130,24 @@ function get_slider($atts) {
                 $output.='<li>' . $thumbnail_html . '</li>';
             }
             $output.='</ul>';
+            $output.='</div>';
+            
+            if( 'true' == $opt_val_nav)
+             $nav='namespace: "callbacks",';
+            else
+             $nav='';
+            
             $output .='<script>$(function () {
                         $("#slider1").responsiveSlides({
-                          maxwidth: ' . $opt_val_max_width . ',
-                          speed: ' . $opt_val_speed . ',
-                          pager: true,
+                          maxwidth: '.$opt_val_max_width.',
+                          speed: '.$opt_val_speed .',
+                          nav: '.$opt_val_nav.',
+                          '.$nav.'
                         });
                         });
                         </script>';
+            
+            
         }
         return $output;
     }
@@ -162,19 +173,25 @@ function show_settings_admin_page() {
     $opt_sld_speed = 'sld_speed';
     $data_field_sld_speed = 'sld_speed';
     $opt_sld_auto = 'sld_auto';
+    $opt_sld_nav = 'sld_nav';
     $data_field_sld_auto = 'sld_auto';
+    $data_field_sld_nav = 'sld_nav';
+    
     $opt_val_max_width = get_option( $opt_sld_max_width );
     $opt_val_speed = get_option( $opt_sld_speed );
     $opt_val_auto = get_option( $opt_sld_auto );
+    $opt_val_nav = get_option( $opt_sld_nav );
     
     if ( isset($_POST[$hidden_field_name]) && $_POST[$hidden_field_name] == 'Y' ) {
         $opt_val_max_width = $_POST[$data_field_sld_max_width];
         $opt_val_speed = $_POST[$data_field_sld_speed];
         $opt_val_auto = $_POST[$data_field_sld_auto];
+        $opt_val_nav = $_POST[$data_field_sld_nav];
 
         update_option( $opt_sld_max_width, $opt_val_max_width );
         update_option( $opt_sld_speed, $opt_val_speed );
         update_option( $opt_sld_auto, $opt_val_auto );
+        update_option( $opt_sld_nav, $opt_val_nav );
         ?>
         <div class="updated"><p><strong><?php _e( 'settings saved.', 'myslider' ); ?></strong></p></div>
         <?php }
@@ -194,6 +211,12 @@ function show_settings_admin_page() {
             <input type="radio" <?php echo ('true' == $opt_val_auto) ? 'checked' : ''; ?>  name="<?php echo $data_field_sld_auto; ?>" value="true" size="20">True
             <input type="radio" <?php echo ('false' == $opt_val_auto) ? 'checked' : ''; ?> name="<?php echo $data_field_sld_auto; ?>" value="false" size="20">False
         </p><hr />
+        
+        <p><?php _e( "Navigation:", 'myslider' ); ?> 
+            <input type="radio" <?php echo ('true' == $opt_val_nav) ? 'checked' : ''; ?>  name="<?php echo $data_field_sld_nav; ?>" value="true" size="20">True
+            <input type="radio" <?php echo ('false' == $opt_val_nav) ? 'checked' : ''; ?> name="<?php echo $data_field_sld_nav; ?>" value="false" size="20">False
+        </p><hr />
+        
         <p class="submit">
             <input type="submit" name="Submit" class="button-primary" value="<?php esc_attr_e('Save Changes') ?>" />
         </p>
