@@ -1,3 +1,7 @@
+=== Myslideshow ===
+Contributors: Rafik Malek
+Tags: wordpress slider, responsive, image slider, responsive slider, slideshow, fullwidth slider, 
+
 == Description ==
 
 MySlideshow provides an easy way to integrate a slideshow for any WordPress installation
@@ -23,4 +27,9 @@ image. Insert the image by clicking 'Insert'.
 4. Save slide  
 
 5. Go to a post or a page and add shortcode e.g :- [myslideshow id='1']
+
+
+Demo :-http://fzwebtech.in/
+
+
 
