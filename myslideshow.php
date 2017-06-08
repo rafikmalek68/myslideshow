@@ -8,8 +8,16 @@
 
 function myslideshow_init() {
     $args = array(
+        'labels' => array(
+            'name' => __( 'Slideshows' ),
+            'singular_name' => __( 'Slideshow' ),
+            'add_new' => __('Add New', 'Slideshow'),
+            'add_new_item' => __('Add New Slideshow'),
+            'edit_item' => __('Edit Slideshow'),
+            'new_item' => __('New Slideshow'),
+            'view_item' => __('View Slideshow'),
+        ),
         'public' => true,
-        'label' => 'My Slideshow',
         'supports' => array(
             'title',
             'thumbnail',
@@ -23,10 +31,8 @@ add_action('init', 'myslideshow_init');
 function wp_slide_add_scripts() {
     wp_register_script( 'slider-jquery', plugins_url('/lib/responsiveslides/js/jquery.min.js', __FILE__) );
     wp_register_script( 'slider-responsiveslides', plugins_url('/lib/responsiveslides/js/responsiveslides.min.js', __FILE__) );
-    wp_register_script( 'slider-custom', plugins_url('/lib/responsiveslides/js/slider-custom.js', __FILE__) );
     wp_enqueue_script( 'slider-jquery' );
     wp_enqueue_script( 'slider-responsiveslides' );
-    wp_enqueue_script( 'slider-custom' );
 }
 
 add_action( 'wp_enqueue_scripts', 'wp_slide_add_scripts' );
@@ -53,7 +59,12 @@ add_action( 'admin_enqueue_scripts', 'add_admin_scripts', 10, 1 );
 add_action( 'add_meta_boxes', 'listing_image_add_metabox' );
 
 function listing_image_add_metabox() {
-    add_meta_box( 'listingimagediv', __('Slideshow Images', 'text-domain'), 'listing_image_metabox', 'myslideshow', 'advanced', 'low' );
+    add_meta_box( 'listingimagediv', __('Slides', 'text-domain'), 'listing_image_metabox', 'myslideshow', 'advanced', 'low' );
+    add_meta_box( 'Shortcode', __('Copy Shortcode', 'text-domain'), 'copy_shortcode', 'myslideshow', 'advanced', 'low' );
+}
+
+function copy_shortcode( $post ) {
+    echo $content="<pre>[myslideshow id='".$post->ID."']</pre>";
 }
 
 function listing_image_metabox( $post ) {
@@ -211,12 +222,10 @@ function show_settings_admin_page() {
             <input type="radio" <?php echo ('true' == $opt_val_auto) ? 'checked' : ''; ?>  name="<?php echo $data_field_sld_auto; ?>" value="true" size="20">True
             <input type="radio" <?php echo ('false' == $opt_val_auto) ? 'checked' : ''; ?> name="<?php echo $data_field_sld_auto; ?>" value="false" size="20">False
         </p><hr />
-        
         <p><?php _e( "Navigation:", 'myslider' ); ?> 
             <input type="radio" <?php echo ('true' == $opt_val_nav) ? 'checked' : ''; ?>  name="<?php echo $data_field_sld_nav; ?>" value="true" size="20">True
             <input type="radio" <?php echo ('false' == $opt_val_nav) ? 'checked' : ''; ?> name="<?php echo $data_field_sld_nav; ?>" value="false" size="20">False
         </p><hr />
-        
         <p class="submit">
             <input type="submit" name="Submit" class="button-primary" value="<?php esc_attr_e('Save Changes') ?>" />
         </p>

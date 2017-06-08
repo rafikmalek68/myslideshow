@@ -18,7 +18,9 @@ uploaded can be inserted into your slideshow right away!
 2. After activating MySlideshow, click on 'MySlideshows' and create a new slideshow.
 
 3. Click on 'add Slide' to insert an image slide, a popup will appear where you can search for the desired
-image. Insert the image by clicking 'Insert'. 
+image. Insert the image by clicking 'Insert'.
 
-4. Go to a post or a page and add shortcode e.g :-
+4. Save slide  
+
+5. Go to a post or a page and add shortcode e.g :- [myslideshow id='1']
 
