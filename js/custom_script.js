@@ -21,10 +21,10 @@ jQuery(document).ready(function ( $ ) {
             var images_html = '';
             for ( var i = 0; i < attachment.length; i++ ) {
                 images_html += '<li class="ui-state-default" id="imageid_' + attachment[i].id + '">';
-                images_html += '<span class="ui-icon ui-icon-arrowthick-2-n-s"></span>';
-                images_html += '<img src="' + attachment[i].url + '" style="width:150px;hight:auto;border:0;display:none;" />';
+                images_html += '<p class="draging">'+attachment[i].title+'</p>';
                 images_html += '<input type="hidden" id="hidden_imgid_' + attachment[i].id + '" name="ImageIds[]" value="' + attachment[i].id + '" />';
-                images_html += '<p class="hide-if-no-js"><a title="" class="remove_img" href="javascript:;"  id="remove_' + attachment[i].id + '" >Remove</a></p>';
+                images_html += '<img  src="' + attachment[i].sizes.thumbnail.url + '" width="'+ attachment[i].sizes.thumbnail.width+'" height="'+ attachment[i].sizes.thumbnail.height+'" />';
+                images_html += '<p class="hide-if-no-js"><a  title="" class="remove-img" href="javascript:;"  id="remove_' + attachment[i].id + '" >Delete slide</a></p>';
                 images_html += '</li>';
             }
             jQuery("#slideimage_contenar").append(images_html);
@@ -36,9 +36,11 @@ jQuery(document).ready(function ( $ ) {
         event.preventDefault();
         jQuery.fn.upload_listing_image(jQuery(this));
     });
-    jQuery('#listingimagediv').on('click', '.remove_img', function (event) {
-        event.preventDefault();
+    jQuery('#listingimagediv').on('click', '.remove-img', function (event) {
+        
+        if (confirm("Are you sure you want to delete this slide?") == true) {
         jQuery(this).parent().parent().remove();
+        } 
     });
 });
 jQuery(function () {
