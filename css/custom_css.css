@@ -23,11 +23,20 @@
     font-weight: 600;
     line-height:27px;
 }
+
 .image_data{
-width: 30%;
+width: 50%;
 display: inline-block;
 margin-left: 10px;
 }
+
+.slide-input{
+    width: 100%;
+    margin: 5px;
+    padding: 3px;
+    
+}
+
 .ui-state-default img{
     display: inline-block;
     vertical-align: top;

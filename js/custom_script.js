@@ -23,9 +23,21 @@ jQuery(document).ready(function ( $ ) {
                 images_html += '<li class="ui-state-default" id="imageid_' + attachment[i].id + '">';
                 images_html += '<p class="draging">'+attachment[i].title+'</p>';
                 images_html += '<input type="hidden" id="hidden_imgid_' + attachment[i].id + '" name="ImageIds[]" value="' + attachment[i].id + '" />';
+                
+                
+                
+                
                 images_html += '<img  src="' + attachment[i].sizes.thumbnail.url + '" width="'+ attachment[i].sizes.thumbnail.width+'" height="'+ attachment[i].sizes.thumbnail.height+'" />';
+                
+                images_html += '<div class="image_data">';
+                images_html += '<input class="slide-input" type="text" placeholder="Title"  name="slide_title[]"  />';
+                images_html += '<textarea class="slide-input" placeholder="Description" name="slide_description[]"></textarea>';
+                images_html += '</div>';
+                
                 images_html += '<p class="hide-if-no-js"><a  title="" class="remove-img" href="javascript:;"  id="remove_' + attachment[i].id + '" >Delete slide</a></p>';
+                
                 images_html += '</li>';
+                
             }
             jQuery("#slideimage_contenar").append(images_html);
             jQuery('#listingimagediv img').show();
@@ -45,5 +57,9 @@ jQuery(document).ready(function ( $ ) {
 });
 jQuery(function () {
     jQuery("#slideimage_contenar").sortable();
-    jQuery("#slideimage_contenar").disableSelection();
+    //jQuery("#slideimage_contenar").disableSelection();
+    
+    
+    
+    
 });
