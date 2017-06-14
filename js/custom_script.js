@@ -31,7 +31,7 @@ jQuery(document).ready(function ( $ ) {
                 
                 images_html += '<div class="image_data">';
                 images_html += '<input class="slide-input" type="text" placeholder="Title"  name="slide_title[]"  />';
-                images_html += '<textarea class="slide-input" placeholder="Description" name="slide_description[]"></textarea>';
+                images_html += '<textarea class="slide-input input-content" placeholder="Description" name="slide_description[]"></textarea>';
                 images_html += '</div>';
                 
                 images_html += '<p class="hide-if-no-js"><a  title="" class="remove-img" href="javascript:;"  id="remove_' + attachment[i].id + '" >Delete slide</a></p>';

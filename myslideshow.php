@@ -87,7 +87,7 @@ function listing_image_metabox( $post ) {
                     $content .=$thumbnail_html;
                     $content .= '<div class="image_data">';
                     $content .= '<input class="slide-input" type="text" placeholder="Title" value="'.esc_attr($slide_title).'"  name="slide_title[]"  />';
-                    $content .= '<textarea class="slide-input" placeholder="Description"  name="slide_description[]">'.esc_attr($slide_description).'</textarea>';
+                    $content .= '<textarea class="slide-input input-content" placeholder="Description"  name="slide_description[]">'.esc_attr($slide_description).'</textarea>';
                     $content .= '</div>';
                     $content .='<input type="hidden" id="hidden_imgid_' . esc_attr($image_id) . '" name="ImageIds[]" value="' . esc_attr($image_id) . '" />';
                     $content .='<p class="hide-if-no-js"><a title="" class="remove-img" href="javascript:;"   id="remove_' . esc_attr($image_id) . '" >Delete slide</a></p>';

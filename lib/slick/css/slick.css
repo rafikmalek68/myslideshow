@@ -109,7 +109,7 @@
 /* Custom css*/
 .slider {
     width: 100%;
-    margin: 100px auto;
+    margin: 30px auto;
 }
 .slick-slide {
   margin: 0px 20px;
@@ -127,21 +127,30 @@
 .slider-img-container .slide-title{
     position: absolute;
     top: 12px;
-    left: 7px;
-    background-color: rgba(0,0,0,0.4) ;
+    left: 20px;
+    background-color: rgba(0,0,0,0.2) ;
     color: #FFFFFF;
     padding: 5px;
-    font-size: 18px;
-    max-width: 90%;
+    font-size: 20px;
+    width: 40%;
+    font-weight: 600;
+    line-height: 40px;
+    max-height: 49px;
+    overflow: hidden;
+    
 } 
 .slider-img-container .slide-content{
     position: absolute;
-    top: 54px;
-    left: 7px;
-    background-color: rgba(0,0,0,0.3);
+    top: 64px;
+    left: 20px;
+    background-color: rgba(0,0,0,0.2);
     color: #FFFFFF;
     padding: 15px;
-    font-size: 13px;
+    font-size: 15px;
     word-wrap: break-word;
-    max-width: 90%;
+    width: 40%;
+    font-weight: 500;
+    line-height: 30px;
+    max-height: 70%;
+    overflow: hidden;
 } 
