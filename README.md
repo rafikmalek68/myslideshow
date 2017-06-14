@@ -34,8 +34,17 @@ image. Insert the image by clicking 'Insert'.
 
 5. Go to a post or a page and add shortcode e.g :- [myslideshow id='1']
 
+=== Library used ===
 
-Demo :-http://fzwebtech.in/
+-Slick slider
+
+    Slick slider library is used in myslideshow plugin
+
+    Site url : -http://kenwheeler.github.io/slick/
+
+=== Demo ===
+
+Demo site :-http://fzwebtech.in/
 
 Admin :-http://fzwebtech.in/wp-admin
 
