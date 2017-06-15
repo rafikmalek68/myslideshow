@@ -126,9 +126,9 @@
 }    
 .slider-img-container .slide-title{
     position: absolute;
-    top: 12px;
+    top: 22px;
     left: 20px;
-    background-color: rgba(0,0,0,0.2) ;
+    background-color: rgba(0,0,0,0.2);
     color: #FFFFFF;
     padding: 5px;
     font-size: 20px;
@@ -141,7 +141,7 @@
 } 
 .slider-img-container .slide-content{
     position: absolute;
-    top: 64px;
+    top: 73px;
     left: 20px;
     background-color: rgba(0,0,0,0.2);
     color: #FFFFFF;

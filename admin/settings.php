@@ -36,6 +36,7 @@ function show_settings_admin_page() {
     $opt_val_slides_to_scroll = get_option( $opt_sld_slides_to_scroll );
     $opt_val_dot = get_option( $opt_sld_dot );
     $opt_val_infinite = get_option( $opt_sld_infinite );
+    $opt_val_center_mode = get_option( $opt_sld_center_mode );
     $opt_val_variable_width = get_option( $opt_sld_variable_width );
     
     if ( isset($_POST[$hidden_field_name]) && $_POST[$hidden_field_name] == 'Y' ) {
@@ -58,39 +59,39 @@ function show_settings_admin_page() {
         <div class="updated"><p><strong><?php _e( 'settings saved.', 'myslider' ); ?></strong></p></div>
         <?php }
         echo '<div class="wrap">';
-        echo '<h2>' . __( 'General Settings', 'myslider' ) . '</h2>';
+        echo '<h2>' . __( 'Default Settings', 'myslider' ) . '</h2>';
 ?>
 
     <form name="slide-settings" id="slide-settings" method="post" action="">
-        <input type="hidden" name="<?php echo $hidden_field_name; ?>" value="Y">
+        <input type="hidden" name="<?php echo esc_attr($hidden_field_name); ?>" value="Y">
         
         <p><span><?php _e( "Dots Show", 'myslider' ); ?></span>
-            <input type="radio" <?php echo ('true' == $opt_val_dot) ? 'checked' : ''; ?>  name="<?php echo $data_field_sld_dot; ?>" value="true" > Yes 
-            <input type="radio" <?php echo ('false' == $opt_val_dot) ? 'checked' : ''; ?> name="<?php echo $data_field_sld_dot; ?>" value="false" > No 
+            <input type="radio" <?php echo ('true' == $opt_val_dot) ? 'checked' : ''; ?>  name="<?php echo esc_attr($data_field_sld_dot); ?>" value="true" > Yes 
+            <input type="radio" <?php echo ('false' == $opt_val_dot) ? 'checked' : ''; ?> name="<?php echo esc_attr($data_field_sld_dot); ?>" value="false" > No 
         </p><hr />
         
         <p><span><?php _e( "Infinite", 'myslider' ); ?> </span>
-            <input type="radio" <?php echo ('true' == $opt_val_infinite) ? 'checked' : ''; ?>  name="<?php echo $data_field_sld_infinite; ?>" value="true" > Yes 
-            <input type="radio" <?php echo ('false' == $opt_val_infinite) ? 'checked' : ''; ?> name="<?php echo $data_field_sld_infinite; ?>" value="false" > No 
+            <input type="radio" <?php echo ('true' == $opt_val_infinite) ? 'checked' : ''; ?>  name="<?php echo esc_attr($data_field_sld_infinite); ?>" value="true" > Yes 
+            <input type="radio" <?php echo ('false' == $opt_val_infinite) ? 'checked' : ''; ?> name="<?php echo esc_attr($data_field_sld_infinite); ?>" value="false" > No 
         </p><hr />
         
         <p><span><?php _e( "Center Mode", 'myslider' ); ?> </span>
-            <input type="radio" <?php echo ('true' == $opt_val_center_mode) ? 'checked' : ''; ?>  name="<?php echo $data_field_sld_center_mode; ?>" value="true" > Yes 
-            <input type="radio" <?php echo ('false' == $opt_val_center_mode) ? 'checked' : ''; ?> name="<?php echo $data_field_sld_center_mode; ?>" value="false" > No 
+            <input type="radio" <?php echo ('true' == $opt_val_center_mode) ? 'checked' : ''; ?>  name="<?php echo esc_attr($data_field_sld_center_mode); ?>" value="true" > Yes 
+            <input type="radio" <?php echo ('false' == $opt_val_center_mode) ? 'checked' : ''; ?> name="<?php echo esc_attr($data_field_sld_center_mode); ?>" value="false" > No 
         </p><hr />
 
          <p><span><?php _e( "Variable Width", 'myslider' ); ?> </span>
-            <input type="radio" <?php echo ('true' == $opt_val_variable_width) ? 'checked' : ''; ?>  name="<?php echo $data_field_sld_variable_width; ?>" value="true" > Yes
-            <input type="radio" <?php echo ('false' == $opt_val_variable_width) ? 'checked' : ''; ?> name="<?php echo $data_field_sld_variable_width; ?>" value="false" > No
+            <input type="radio" <?php echo ('true' == $opt_val_variable_width) ? 'checked' : ''; ?>  name="<?php echo esc_attr($data_field_sld_variable_width); ?>" value="true" > Yes
+            <input type="radio" <?php echo ('false' == $opt_val_variable_width) ? 'checked' : ''; ?> name="<?php echo esc_attr($data_field_sld_variable_width); ?>" value="false" > No
         </p><hr />
         
         
         <p><span><?php _e( "Slides To Show", 'myslider' ); ?> </span>
-            <input type="number" name="<?php echo $data_field_sld_slides_to_show; ?>" value="<?php echo $opt_val_slides_to_show; ?>" size="10">
+            <input type="number" name="<?php echo esc_attr($data_field_sld_slides_to_show); ?>" value="<?php echo esc_attr($opt_val_slides_to_show); ?>" size="10">
         </p><hr />
         
         <p><span><?php _e( "Slides To Scroll", 'myslider' ); ?> </span>
-            <input type="number" name="<?php echo $data_field_sld_slides_to_scroll; ?>" value="<?php echo $opt_val_slides_to_scroll; ?>" size="10">
+            <input type="number" name="<?php echo esc_attr($data_field_sld_slides_to_scroll); ?>" value="<?php echo esc_attr($opt_val_slides_to_scroll); ?>" size="10">
         </p><hr />
         
         <p class="submit">
@@ -98,7 +99,7 @@ function show_settings_admin_page() {
         </p>
         
     </form>
-    </div>
+    
 <?php }  
  
 add_filter( 'manage_edit-myslideshow_columns', 'my_edit_myslideshow_columns' ) ;

@@ -19,13 +19,43 @@ function wp_slide_add_style() {
 add_action( 'wp_enqueue_scripts', 'wp_slide_add_style' );
 
 function get_slider( $atts ) {
+    
     global $post;
-    $opt_val_slides_to_show = get_option( 'sld_slides_to_show' );
-    $opt_val_slides_to_scroll = get_option( 'sld_slides_to_scroll' );
-    $opt_val_dot = get_option( 'sld_dot' );
-    $opt_val_infinite = get_option( 'sld_infinite' );
-    $opt_val_sld_variable_width = get_option( 'sld_variable_width' );
-    $opt_val_sld_center_mode = get_option( 'sld_center_mode' );
+        extract(shortcode_atts(array(
+        'id' => ''
+    ), $atts));
+    
+    
+    $opt_val_slides_to_show         = get_post_meta( $id, 'sld_slides_to_show', true );
+    $opt_val_slides_to_scroll       = get_post_meta( $id, 'sld_slides_to_scroll', true );
+    $opt_val_dot                    = get_post_meta( $id, 'sld_dot', true );
+    $opt_val_infinite               = get_post_meta( $id, 'sld_infinite', true );
+    $opt_val_center_mode            = get_post_meta( $id, 'sld_center_mode', true );
+    $opt_val_variable_width         = get_post_meta( $id, 'sld_variable_width', true );    
+    
+    if( ''==$opt_val_slides_to_show){
+        $opt_val_slides_to_show = get_option( 'sld_slides_to_show' );
+    }
+    
+    if( ''==$opt_val_slides_to_scroll){
+        $opt_val_slides_to_scroll = get_option( 'sld_slides_to_scroll' );
+    }
+    
+    if( ''==$opt_val_dot){
+        $opt_val_dot = get_option( 'sld_dot' );
+    }
+    
+    if( ''==$opt_val_infinite ){
+        $opt_val_infinite = get_option( 'sld_infinite' );
+    }
+    if( ''==$opt_val_sld_variable_width){
+        $opt_val_sld_variable_width = get_option( 'sld_variable_width' );
+    }
+    
+    if( ''==$opt_val_sld_center_mode){
+        $opt_val_sld_center_mode = get_option( 'sld_center_mode' );
+    }
+    
     $opt_val_slides_to_show     = ( ''==$opt_val_slides_to_show )? 1 : $opt_val_slides_to_show;
     $opt_val_slides_to_scroll   = ( ''==$opt_val_slides_to_scroll )? 1 : $opt_val_slides_to_scroll;
     $opt_val_dot                = ( ''==$opt_val_dot )? 'true' : $opt_val_dot;
@@ -33,20 +63,16 @@ function get_slider( $atts ) {
     $opt_val_sld_variable_width = ( ''==$opt_val_sld_variable_width )? 'false' : $opt_val_sld_variable_width;
     $opt_val_sld_center_mode    = ( ''==$opt_val_sld_center_mode )? 'false' : $opt_val_sld_center_mode;
     
-    extract(shortcode_atts(array(
-        'id' => ''
-    ), $atts));
-    
     $args = array( 'post_type' => 'myslideshow', 'p' => $id );
-    
     $myposts = NEW WP_Query($args);
-    
     if ( $myposts->have_posts() ) {
         while ( $myposts->have_posts() ) {
             $myposts->the_post();
             $image_string = get_post_meta( $post->ID, '_ImageIds', true );
             $image_array = json_decode( $image_string );
-            $output.='<section class="regular slider">';
+            $section_id="slider-".$id;
+            
+            $output.='<section class="regular slider" id="'.$section_id.'">';
             
             for ( $i = 0; $i < count($image_array); $i++ ) {
                 
@@ -68,8 +94,9 @@ function get_slider( $atts ) {
             }
             
             $output.='</section>';
+            
             $output .='<script>$(function () {
-                        $(".regular").slick({
+                        $("#'.$section_id.'").slick({
                             dots: '.$opt_val_dot.',
                             infinite: '.$opt_val_infinite.',
                             centerMode: '.$opt_val_sld_center_mode.',    

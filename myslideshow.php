@@ -47,13 +47,80 @@ add_action( 'admin_enqueue_scripts', 'add_admin_scripts', 10, 1 );
 add_action( 'add_meta_boxes', 'listing_image_add_metabox' );
 
 function listing_image_add_metabox() {
-    add_meta_box( 'listingimagediv', __('Slides', 'text-domain'), 'listing_image_metabox', 'myslideshow', 'advanced', 'low' );
-    add_meta_box( 'Shortcode', __('Copy Shortcode', 'text-domain'), 'copy_shortcode', 'myslideshow', 'advanced', 'low' );
+    add_meta_box( 'listingimagediv', __('Slides', 'myslideshow'), 'listing_image_metabox', 'myslideshow', 'advanced', 'low' );
+    add_meta_box( 'Settings', __('Slide Settings', 'myslideshow'), 'this_slide_settings', 'myslideshow', 'advanced', 'low' );
+    add_meta_box( 'Shortcode', __('Copy Shortcode', 'myslideshow'), 'copy_shortcode', 'myslideshow', 'advanced', 'low' );
 }
 
 function copy_shortcode( $post ) {
     echo $content="<p>[myslideshow id='".$post->ID."']</p>";
 }
+
+function this_slide_settings( $post ) { 
+    
+    $hidden_field_name = 'sld_submit_hidden';
+    
+    $opt_sld_slides_to_show = 'sld_slides_to_show';
+    $data_field_sld_slides_to_show = 'sld_slides_to_show';
+    
+    $opt_sld_slides_to_scroll = 'sld_slides_to_scroll';
+    $data_field_sld_slides_to_scroll = 'sld_slides_to_scroll';
+    
+    $opt_sld_dot = 'sld_dot';
+    $data_field_sld_dot = 'sld_dot';
+    
+    $opt_sld_infinite = 'sld_infinite';
+    $data_field_sld_infinite = 'sld_infinite';
+    
+    $opt_sld_center_mode = 'sld_center_mode';
+    $data_field_sld_center_mode = 'sld_center_mode';
+    
+    $opt_sld_variable_width = 'sld_variable_width';
+    $data_field_sld_variable_width = 'sld_variable_width';
+    
+    
+    $opt_val_slides_to_show         = get_post_meta( $post->ID, $opt_sld_slides_to_show, true );
+    $opt_val_slides_to_scroll       = get_post_meta( $post->ID, $opt_sld_slides_to_scroll, true );
+    $opt_val_dot                    = get_post_meta( $post->ID, $opt_sld_dot, true );
+    $opt_val_infinite               = get_post_meta( $post->ID, $opt_sld_infinite, true );
+    $opt_val_center_mode            = get_post_meta( $post->ID, $opt_sld_center_mode, true );
+    $opt_val_variable_width         = get_post_meta( $post->ID, $opt_sld_variable_width, true );
+    
+    ?>
+
+<div id="slide-settings">
+        <input type="hidden" name="<?php echo esc_attr($hidden_field_name); ?>" value="Y">
+        <p><span><?php _e( "Dots Show", 'myslider' ); ?></span>
+            <input type="radio" <?php echo ('true' == $opt_val_dot) ? 'checked' : ''; ?>  name="<?php echo esc_attr($data_field_sld_dot); ?>" value="true" > Yes 
+            <input type="radio" <?php echo ('false' == $opt_val_dot) ? 'checked' : ''; ?> name="<?php echo esc_attr($data_field_sld_dot); ?>" value="false" > No 
+        </p><hr />
+        
+        <p><span><?php _e( "Infinite", 'myslider' ); ?> </span>
+            <input type="radio" <?php echo ('true' == $opt_val_infinite) ? 'checked' : ''; ?>  name="<?php echo esc_attr($data_field_sld_infinite); ?>" value="true" > Yes 
+            <input type="radio" <?php echo ('false' == $opt_val_infinite) ? 'checked' : ''; ?> name="<?php echo esc_attr($data_field_sld_infinite); ?>" value="false" > No 
+        </p><hr />
+        
+        <p><span><?php _e( "Center Mode", 'myslider' ); ?> </span>
+            <input type="radio" <?php echo ('true' == $opt_val_center_mode) ? 'checked' : ''; ?>  name="<?php echo esc_attr($data_field_sld_center_mode); ?>" value="true" > Yes 
+            <input type="radio" <?php echo ('false' == $opt_val_center_mode) ? 'checked' : ''; ?> name="<?php echo esc_attr($data_field_sld_center_mode); ?>" value="false" > No 
+        </p><hr />
+
+         <p><span><?php _e( "Variable Width", 'myslider' ); ?> </span>
+            <input type="radio" <?php echo ('true' == $opt_val_variable_width) ? 'checked' : ''; ?>  name="<?php echo esc_attr($data_field_sld_variable_width); ?>" value="true" > Yes
+            <input type="radio" <?php echo ('false' == $opt_val_variable_width) ? 'checked' : ''; ?> name="<?php echo esc_attr($data_field_sld_variable_width); ?>" value="false" > No
+        </p><hr />
+        
+        
+        <p><span><?php _e( "Slides To Show", 'myslider' ); ?> </span>
+            <input type="number" name="<?php echo esc_attr($data_field_sld_slides_to_show); ?>" value="<?php echo esc_attr($opt_val_slides_to_show); ?>" size="10">
+        </p><hr />
+        
+        <p><span><?php _e( "Slides To Scroll", 'myslider' ); ?> </span>
+            <input type="number" name="<?php echo esc_attr($data_field_sld_slides_to_scroll); ?>" value="<?php echo esc_attr($opt_val_slides_to_scroll); ?>" size="10">
+        </p>
+</div>
+<?php }
+
 
 function listing_image_metabox( $post ) {
     
@@ -118,5 +185,28 @@ function listing_image_save($post_id) {
     } else {
             update_post_meta($post_id, '_ImageIds', '');
     }
+    
+    if ( isset( $_POST['sld_submit_hidden'] ) ) {
+        $data_field_sld_slides_to_show      = $_POST['sld_slides_to_show'];
+        update_post_meta( $post_id, 'sld_slides_to_show', $data_field_sld_slides_to_show );
+        
+        $data_field_sld_slides_to_scroll    = $_POST['sld_slides_to_scroll'];
+        update_post_meta( $post_id, 'sld_slides_to_scroll', $data_field_sld_slides_to_scroll );
+        
+        $data_field_sld_dot                 = $_POST['sld_dot'];
+        update_post_meta( $post_id, 'sld_dot', $data_field_sld_dot );
+        
+        $data_field_sld_infinite            = $_POST['sld_infinite'];
+        update_post_meta( $post_id, 'sld_infinite', $data_field_sld_infinite );
+        
+        $data_field_sld_center_mode         = $_POST['sld_center_mode'];
+        update_post_meta( $post_id, 'sld_center_mode', $data_field_sld_center_mode );
+        
+        $data_field_sld_variable_width      = $_POST['sld_variable_width'];
+        update_post_meta( $post_id, 'sld_variable_width', $data_field_sld_variable_width ); 
+        
+    }
+    
+    
 }
 ?>
