@@ -25,13 +25,18 @@ function get_slider( $atts ) {
         'id' => ''
     ), $atts));
     
-    
     $opt_val_slides_to_show         = get_post_meta( $id, 'sld_slides_to_show', true );
     $opt_val_slides_to_scroll       = get_post_meta( $id, 'sld_slides_to_scroll', true );
     $opt_val_dot                    = get_post_meta( $id, 'sld_dot', true );
     $opt_val_infinite               = get_post_meta( $id, 'sld_infinite', true );
-    $opt_val_center_mode            = get_post_meta( $id, 'sld_center_mode', true );
-    $opt_val_variable_width         = get_post_meta( $id, 'sld_variable_width', true );    
+    $opt_val_sld_center_mode        = get_post_meta( $id, 'sld_center_mode', true );
+    $opt_val_sld_variable_width     = get_post_meta( $id, 'sld_variable_width', true );    
+    
+    $opt_val_sld_arrow              = get_post_meta( $id, 'sld_arrow', true );    
+    $opt_val_sld_fade               = get_post_meta( $id, 'sld_fade', true );    
+    $opt_val_sld_autoplay           = get_post_meta( $id, 'sld_autoplay', true );    
+    $opt_val_sld_autoplay_speed     = get_post_meta( $id, 'sld_autoplay_speed', true );    
+    $opt_val_sld_speeds             = get_post_meta( $id, 'sld_speeds', true );    
     
     if( ''==$opt_val_slides_to_show){
         $opt_val_slides_to_show = get_option( 'sld_slides_to_show' );
@@ -56,12 +61,37 @@ function get_slider( $atts ) {
         $opt_val_sld_center_mode = get_option( 'sld_center_mode' );
     }
     
+    if( ''==$opt_val_sld_arrow){
+        $opt_val_sld_arrow = get_option( 'sld_arrow' );
+    }
+    
+    if( ''==$opt_val_sld_fade){
+        $opt_val_sld_fade = get_option( 'sld_fade' );
+    }
+    
+    if( ''==$opt_val_sld_autoplay){
+        $opt_val_sld_autoplay = get_option( 'sld_autoplay' );
+    }
+    
+    if( ''==$opt_val_sld_autoplay_speed){
+        $opt_val_sld_autoplay_speed = get_option( 'sld_autoplay_speed' );
+    }
+    
+    if( ''==$opt_val_sld_speeds){
+        $opt_val_sld_speeds = get_option( 'sld_speeds' );
+    }
+    
     $opt_val_slides_to_show     = ( ''==$opt_val_slides_to_show )? 1 : $opt_val_slides_to_show;
     $opt_val_slides_to_scroll   = ( ''==$opt_val_slides_to_scroll )? 1 : $opt_val_slides_to_scroll;
     $opt_val_dot                = ( ''==$opt_val_dot )? 'true' : $opt_val_dot;
     $opt_val_infinite           = ( ''==$opt_val_infinite )? 'true' : $opt_val_infinite;
     $opt_val_sld_variable_width = ( ''==$opt_val_sld_variable_width )? 'false' : $opt_val_sld_variable_width;
     $opt_val_sld_center_mode    = ( ''==$opt_val_sld_center_mode )? 'false' : $opt_val_sld_center_mode;
+    $opt_val_sld_arrow          = ( ''==$opt_val_sld_arrow )? 'true' : $opt_val_sld_arrow;
+    $opt_val_sld_fade           = ( ''==$opt_val_sld_fade )? 'false' : $opt_val_sld_fade;
+    $opt_val_sld_autoplay       = ( ''==$opt_val_sld_autoplay )? 'false' : $opt_val_sld_autoplay;
+    $opt_val_sld_autoplay_speed = ( ''==$opt_val_sld_autoplay_speed )? '1000' : $opt_val_sld_autoplay_speed;
+    $opt_val_speeds             = ( ''==$opt_val_speeds )? '1000' : $opt_val_speeds;
     
     $args = array( 'post_type' => 'myslideshow', 'p' => $id );
     $myposts = NEW WP_Query($args);
@@ -103,6 +133,11 @@ function get_slider( $atts ) {
                             slidesToShow: '.$opt_val_slides_to_show.',
                             slidesToScroll: '.$opt_val_slides_to_scroll.',
                             variableWidth: '.$opt_val_sld_variable_width.',
+                            arrows: '.$opt_val_sld_arrow.',    
+                            fade: '.$opt_val_sld_fade.',
+                            speed: '.$opt_val_sld_speeds.',
+                            autoplay: '.$opt_val_sld_autoplay.',
+                            autoplaySpeed: '.$opt_val_sld_autoplay_speed.',
                           });
                         });
                         </script>';

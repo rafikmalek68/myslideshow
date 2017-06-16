@@ -53,31 +53,34 @@ function listing_image_add_metabox() {
 }
 
 function copy_shortcode( $post ) {
-    echo $content="<p>[myslideshow id='".$post->ID."']</p>";
+echo $content='<input type="text" readonly="readonly" onClick="this.select();" value=" [myslideshow id='."'$post->ID'".'] " />';
 }
 
 function this_slide_settings( $post ) { 
     
     $hidden_field_name = 'sld_submit_hidden';
-    
     $opt_sld_slides_to_show = 'sld_slides_to_show';
     $data_field_sld_slides_to_show = 'sld_slides_to_show';
-    
     $opt_sld_slides_to_scroll = 'sld_slides_to_scroll';
     $data_field_sld_slides_to_scroll = 'sld_slides_to_scroll';
-    
     $opt_sld_dot = 'sld_dot';
     $data_field_sld_dot = 'sld_dot';
-    
     $opt_sld_infinite = 'sld_infinite';
     $data_field_sld_infinite = 'sld_infinite';
-    
     $opt_sld_center_mode = 'sld_center_mode';
     $data_field_sld_center_mode = 'sld_center_mode';
-    
     $opt_sld_variable_width = 'sld_variable_width';
     $data_field_sld_variable_width = 'sld_variable_width';
-    
+    $opt_sld_arrow = 'sld_arrow';
+    $data_field_sld_arrow = 'sld_arrow';
+    $opt_sld_fade = 'sld_fade';
+    $data_field_sld_fade = 'sld_fade';
+    $opt_sld_speeds = 'sld_speeds';
+    $data_field_sld_speeds = 'sld_speeds';
+    $opt_sld_autoplay = 'sld_autoplay';
+    $data_field_sld_autoplay = 'sld_autoplay';
+    $opt_sld_autoplay_speed = 'sld_autoplay_speed';
+    $data_field_sld_autoplay_speed = 'sld_autoplay_speed';
     
     $opt_val_slides_to_show         = get_post_meta( $post->ID, $opt_sld_slides_to_show, true );
     $opt_val_slides_to_scroll       = get_post_meta( $post->ID, $opt_sld_slides_to_scroll, true );
@@ -86,6 +89,11 @@ function this_slide_settings( $post ) {
     $opt_val_center_mode            = get_post_meta( $post->ID, $opt_sld_center_mode, true );
     $opt_val_variable_width         = get_post_meta( $post->ID, $opt_sld_variable_width, true );
     
+    $opt_val_arrow             = get_post_meta( $post->ID, $opt_sld_arrow, true );
+    $opt_val_fade              = get_post_meta( $post->ID, $opt_sld_fade, true );
+    $opt_val_autoplay          = get_post_meta( $post->ID, $opt_sld_autoplay, true );
+    $opt_val_autoplay_speed    = get_post_meta( $post->ID, $opt_sld_autoplay_speed, true );
+    $opt_val_speeds            = get_post_meta( $post->ID, $opt_sld_speeds, true );
     ?>
 
 <div id="slide-settings">
@@ -94,33 +102,44 @@ function this_slide_settings( $post ) {
             <input type="radio" <?php echo ('true' == $opt_val_dot) ? 'checked' : ''; ?>  name="<?php echo esc_attr($data_field_sld_dot); ?>" value="true" > Yes 
             <input type="radio" <?php echo ('false' == $opt_val_dot) ? 'checked' : ''; ?> name="<?php echo esc_attr($data_field_sld_dot); ?>" value="false" > No 
         </p><hr />
-        
+        <p><span><?php _e( "Arrows Show", 'myslider' ); ?></span>
+            <input type="radio" <?php echo ('true' == $opt_val_arrow) ? 'checked' : ''; ?>  name="<?php echo esc_attr($data_field_sld_arrow); ?>" value="true" > Yes 
+            <input type="radio" <?php echo ('false' == $opt_val_arrow) ? 'checked' : ''; ?> name="<?php echo esc_attr($data_field_sld_arrow); ?>" value="false" > No 
+        </p><hr />
+        <p><span><?php _e( "Fade", 'myslider' ); ?></span>
+            <input type="radio" <?php echo ('true' == $opt_val_fade) ? 'checked' : ''; ?>  name="<?php echo esc_attr($data_field_sld_fade); ?>" value="true" > Yes 
+            <input type="radio" <?php echo ('false' == $opt_val_fade) ? 'checked' : ''; ?> name="<?php echo esc_attr($data_field_sld_fade); ?>" value="false" > No 
+        </p><hr />
+        <p><span><?php _e( "Autoplay", 'myslider' ); ?></span>
+            <input type="radio" <?php echo ('true' == $opt_val_autoplay) ? 'checked' : ''; ?>  name="<?php echo esc_attr($data_field_sld_autoplay); ?>" value="true" > Yes 
+            <input type="radio" <?php echo ('false' == $opt_val_autoplay) ? 'checked' : ''; ?> name="<?php echo esc_attr($data_field_sld_autoplay); ?>" value="false" > No 
+        </p><hr />
+        <p><span><?php _e( "Autoplay Speed", 'myslider' ); ?> </span>
+            <input type="number" min="100" name="<?php echo esc_attr($data_field_sld_autoplay_speed); ?>" value="<?php echo esc_attr($opt_val_autoplay_speed); ?>" size="10">
+        </p><hr />
+        <p><span><?php _e( "Slide Speed", 'myslider' ); ?> </span>
+            <input type="number" min="100" name="<?php echo esc_attr($data_field_sld_speeds); ?>" value="<?php echo esc_attr($opt_val_speeds); ?>" size="10">
+        </p><hr />
         <p><span><?php _e( "Infinite", 'myslider' ); ?> </span>
             <input type="radio" <?php echo ('true' == $opt_val_infinite) ? 'checked' : ''; ?>  name="<?php echo esc_attr($data_field_sld_infinite); ?>" value="true" > Yes 
             <input type="radio" <?php echo ('false' == $opt_val_infinite) ? 'checked' : ''; ?> name="<?php echo esc_attr($data_field_sld_infinite); ?>" value="false" > No 
         </p><hr />
-        
         <p><span><?php _e( "Center Mode", 'myslider' ); ?> </span>
             <input type="radio" <?php echo ('true' == $opt_val_center_mode) ? 'checked' : ''; ?>  name="<?php echo esc_attr($data_field_sld_center_mode); ?>" value="true" > Yes 
             <input type="radio" <?php echo ('false' == $opt_val_center_mode) ? 'checked' : ''; ?> name="<?php echo esc_attr($data_field_sld_center_mode); ?>" value="false" > No 
         </p><hr />
-
-         <p><span><?php _e( "Variable Width", 'myslider' ); ?> </span>
+        <p><span><?php _e( "Variable Width", 'myslider' ); ?> </span>
             <input type="radio" <?php echo ('true' == $opt_val_variable_width) ? 'checked' : ''; ?>  name="<?php echo esc_attr($data_field_sld_variable_width); ?>" value="true" > Yes
             <input type="radio" <?php echo ('false' == $opt_val_variable_width) ? 'checked' : ''; ?> name="<?php echo esc_attr($data_field_sld_variable_width); ?>" value="false" > No
         </p><hr />
-        
-        
         <p><span><?php _e( "Slides To Show", 'myslider' ); ?> </span>
-            <input type="number" name="<?php echo esc_attr($data_field_sld_slides_to_show); ?>" value="<?php echo esc_attr($opt_val_slides_to_show); ?>" size="10">
+            <input type="number" min="1" name="<?php echo esc_attr($data_field_sld_slides_to_show); ?>" value="<?php echo esc_attr($opt_val_slides_to_show); ?>" size="10">
         </p><hr />
-        
         <p><span><?php _e( "Slides To Scroll", 'myslider' ); ?> </span>
-            <input type="number" name="<?php echo esc_attr($data_field_sld_slides_to_scroll); ?>" value="<?php echo esc_attr($opt_val_slides_to_scroll); ?>" size="10">
-        </p>
+            <input type="number" min="1" name="<?php echo esc_attr($data_field_sld_slides_to_scroll); ?>" value="<?php echo esc_attr($opt_val_slides_to_scroll); ?>" size="10">
+        </p><hr />
 </div>
 <?php }
-
 
 function listing_image_metabox( $post ) {
     
@@ -187,6 +206,7 @@ function listing_image_save($post_id) {
     }
     
     if ( isset( $_POST['sld_submit_hidden'] ) ) {
+        
         $data_field_sld_slides_to_show      = $_POST['sld_slides_to_show'];
         update_post_meta( $post_id, 'sld_slides_to_show', $data_field_sld_slides_to_show );
         
@@ -205,8 +225,21 @@ function listing_image_save($post_id) {
         $data_field_sld_variable_width      = $_POST['sld_variable_width'];
         update_post_meta( $post_id, 'sld_variable_width', $data_field_sld_variable_width ); 
         
+        $data_field_sld_arrow      = $_POST['sld_arrow'];
+        update_post_meta( $post_id, 'sld_arrow', $data_field_sld_arrow ); 
+        
+        $data_field_sld_fade      = $_POST['sld_fade'];
+        update_post_meta( $post_id, 'sld_fade', $data_field_sld_fade ); 
+        
+        $data_field_sld_autoplay      = $_POST['sld_autoplay'];
+        update_post_meta( $post_id, 'sld_autoplay', $data_field_sld_autoplay ); 
+        
+        $data_field_sld_autoplay_speed      = $_POST['sld_autoplay_speed'];
+        update_post_meta( $post_id, 'sld_autoplay_speed', $data_field_sld_autoplay_speed );
+        
+        $data_field_sld_speeds      = $_POST['sld_speeds'];
+        update_post_meta( $post_id, 'sld_speeds', $data_field_sld_speeds );
+        
     }
-    
-    
 }
 ?>
