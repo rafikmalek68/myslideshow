@@ -16,7 +16,8 @@ uploaded can be inserted into your slideshow right away!
  - Image slides
  - Responsive
  - Place it anywhere on your website
- - Change setting from general setting page
+ - Change setting from slide setting
+ - Add shortcode on post or page
 
 
 === Installation ===
@@ -28,9 +29,11 @@ uploaded can be inserted into your slideshow right away!
 3. Click on 'add Slide' to insert an image slide, a popup will appear where you can search for the desired
 image. Insert the image by clicking 'Insert'.
 
-4. Save slideshow  
+4. Set your settings as need slider
 
-5. Go to a post or a page and add shortcode e.g :- [myslideshow id='1']
+5. Save slideshow  
+
+6. Go to a post or a page and add shortcode e.g :- [myslideshow id='1']
 
 
 === Library used ===
