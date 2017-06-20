@@ -56,7 +56,7 @@ function get_slider( $atts ) {
 	$opt_val_sld_fade           = ( '' == $opt_val_sld_fade )? 'false' : $opt_val_sld_fade;
 	$opt_val_sld_autoplay       = ( '' == $opt_val_sld_autoplay )? 'false' : $opt_val_sld_autoplay;
 	$opt_val_sld_autoplay_speed = ( '' == $opt_val_sld_autoplay_speed )? '1000' : $opt_val_sld_autoplay_speed;
-	$opt_val_sld_speeds             = ( '' == $opt_val_sld_speeds )? '1000' : $opt_val_sld_speeds;
+	$opt_val_sld_speeds         = ( '' == $opt_val_sld_speeds )? '1000' : $opt_val_sld_speeds;
 
 	$args = array( 'post_type' => 'myslideshow', 'p' => $id );
 	$myposts = NEW WP_Query( $args );
@@ -69,46 +69,50 @@ function get_slider( $atts ) {
 			$section_id   = 'slider-' . $id;
                         
                         //Set HTML for short code
-			$output .= '<section class="regular slider" id="' . $section_id . '">';
+			
+                        if( !empty($image_array) ) {
+                            
+                                $output .= '<section class="regular slider" id="' . $section_id . '">';
+                                foreach ( $image_array as $slidevalue ){
+                                        $image_id          = $slidevalue->ImageIds;
+                                        $slide_title       = $slidevalue->slide_title;
+                                        $slide_description = $slidevalue->slide_description;
 
-			foreach ( $image_array as $slidevalue ){
-				$image_id          = $slidevalue->ImageIds;
-				$slide_title       = $slidevalue->slide_title;
-				$slide_description = $slidevalue->slide_description;
-                                
-				$old_content_width = $content_width;
-				$content_width     = 1000;
-				$thumbnail_html    = wp_get_attachment_image( $image_id, array( $content_width, $content_width ) );
-				$output            .= '<div class="slider-img-container  custom-con">';
-				if ( '' !== $slide_title ) {
-					$output .= '<h2 class="slide-title">' . $slide_title . '</h2>';
-				}
-				if ( '' !== $slide_description ) {
-					$output .= '<p class="slide-content">' . $slide_description . '</p>';
-				}
-				$output .= $thumbnail_html;
-				$output .= '</div>';
-			}
+                                        $old_content_width = $content_width;
+                                        $content_width     = 1000;
+                                        $thumbnail_html    = wp_get_attachment_image( $image_id, array( $content_width, $content_width ) );
+                                        $output            .= '<div class="slider-img-container  custom-con">';
+                                        if ( '' !== $slide_title ) {
+                                                $output .= '<h2 class="slide-title">' . $slide_title . '</h2>';
+                                        }
+                                        if ( '' !== $slide_description ) {
+                                                $output .= '<p class="slide-content">' . $slide_description . '</p>';
+                                        }
+                                        $output .= $thumbnail_html;
+                                        $output .= '</div>';
+                                }
 
-			$output .= '</section>';
-                        
-                        //Adding slider initialization script 
-			$output .= '<script>$(function () {
-						$("#' . $section_id . '").slick({
-							dots: ' . $opt_val_dot . ',
-							infinite: ' . $opt_val_infinite . ',
-							centerMode: ' . $opt_val_sld_center_mode . ',    
-							slidesToShow: ' . $opt_val_slides_to_show . ',
-							slidesToScroll: ' . $opt_val_slides_to_scroll . ',
-							variableWidth: ' . $opt_val_sld_variable_width . ',
-							arrows: ' . $opt_val_sld_arrow . ',    
-							fade: ' . $opt_val_sld_fade . ',
-							speed: ' . $opt_val_sld_speeds . ',
-							autoplay: ' . $opt_val_sld_autoplay . ',
-							autoplaySpeed: ' . $opt_val_sld_autoplay_speed . ',
-						  });
-						});
-						</script>';
+
+                            $output .= '</section>';
+
+                            //Adding slider initialization script 
+                            $output .= '<script>$(function () {
+                                                    $("#' . $section_id . '").slick({
+                                                            dots: ' . $opt_val_dot . ',
+                                                            infinite: ' . $opt_val_infinite . ',
+                                                            centerMode: ' . $opt_val_sld_center_mode . ',    
+                                                            slidesToShow: ' . $opt_val_slides_to_show . ',
+                                                            slidesToScroll: ' . $opt_val_slides_to_scroll . ',
+                                                            variableWidth: ' . $opt_val_sld_variable_width . ',
+                                                            arrows: ' . $opt_val_sld_arrow . ',    
+                                                            fade: ' . $opt_val_sld_fade . ',
+                                                            speed: ' . $opt_val_sld_speeds . ',
+                                                            autoplay: ' . $opt_val_sld_autoplay . ',
+                                                            autoplaySpeed: ' . $opt_val_sld_autoplay_speed . ',
+                                                      });
+                                                    });
+                                                    </script>';
+                       } // End if().
 		} // End while().
 		return $output; // Return output
 	} // End if().
